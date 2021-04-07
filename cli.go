@@ -64,9 +64,23 @@ func printTable(quote []Quote) {
 	table := pterm.TableData{{"Symbol", "Market Price", "Pre Market Price", "Market State", "Currency", "Exchange"}}
 
 	for _, elem := range quote {
+		marketPrice := elem.RegularMarketPrice
+		preMarketPrice := elem.PreMarketPrice
+
+		marketPriceStr := fmt.Sprintf("%.2f", marketPrice)
+		preMarketPriceStr := fmt.Sprintf("%.2f", preMarketPrice)
+
+		if preMarketPrice >= marketPrice {
+			preMarketPriceStr = pterm.LightGreen(preMarketPriceStr)
+		} else if preMarketPrice == 0.00 {
+			preMarketPriceStr = pterm.Normal(preMarketPriceStr)
+		} else {
+			preMarketPriceStr = pterm.LightRed(preMarketPriceStr)
+		}
+
 		table = append(
 			table,
-			[]string{elem.Symbol, fmt.Sprintf("%.2f", elem.RegularMarketPrice), fmt.Sprintf("%.2f", elem.PreMarketPrice), elem.MarketState, elem.Currency, elem.Exchange},
+			[]string{elem.Symbol, marketPriceStr, preMarketPriceStr, elem.MarketState, elem.Currency, elem.Exchange},
 		)
 	}
 
