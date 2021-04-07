@@ -62,13 +62,14 @@ func clear() {
 }
 
 func printTable(quote []Quote) {
-	table := pterm.TableData{{"Symbol", "Market Price", "Pre Market Price", "Market State", "Currency", "Exchange"}}
+	table := pterm.TableData{{"Symbol", "Previous Market Price", "Market Price", "Pre Market Price", "Market State", "Currency", "Exchange"}}
 
 	for _, elem := range quote {
 		regularMarketPreviousClose := elem.RegularMarketPreviousClose
 		marketPrice := elem.RegularMarketPrice
 		preMarketPrice := elem.PreMarketPrice
 
+		regularMarketPreviousCloseStr := fmt.Sprintf("%.2f", regularMarketPreviousClose)
 		marketPriceStr := fmt.Sprintf("%.2f", marketPrice)
 		preMarketPriceStr := fmt.Sprintf("%.2f", preMarketPrice)
 
@@ -99,6 +100,7 @@ func printTable(quote []Quote) {
 			table,
 			[]string{
 				elem.Symbol,
+				regularMarketPreviousCloseStr,
 				marketPriceStr + marketPriceDiff,
 				preMarketPriceStr + preMarketPriceDiff,
 				elem.MarketState,
