@@ -14,12 +14,13 @@ import (
 )
 
 type Quote struct {
-	Symbol             string
-	RegularMarketPrice float64
-	PreMarketPrice     float64
-	MarketState        string
-	Currency           string
-	Exchange           string
+	Symbol                     string
+	RegularMarketPrice         float64
+	PreMarketPrice             float64
+	RegularMarketPreviousClose float64
+	MarketState                string
+	Currency                   string
+	Exchange                   string
 }
 
 type Result struct {
@@ -64,12 +65,14 @@ func printTable(quote []Quote) {
 	table := pterm.TableData{{"Symbol", "Market Price", "Pre Market Price", "Market State", "Currency", "Exchange"}}
 
 	for _, elem := range quote {
+		regularMarketPreviousClose := elem.RegularMarketPreviousClose
 		marketPrice := elem.RegularMarketPrice
 		preMarketPrice := elem.PreMarketPrice
 
 		marketPriceStr := fmt.Sprintf("%.2f", marketPrice)
 		preMarketPriceStr := fmt.Sprintf("%.2f", preMarketPrice)
 
+		// set red green normal for the premarket price
 		if preMarketPrice >= marketPrice {
 			preMarketPriceStr = pterm.LightGreen(preMarketPriceStr)
 		} else if preMarketPrice == 0.00 {
@@ -78,9 +81,29 @@ func printTable(quote []Quote) {
 			preMarketPriceStr = pterm.LightRed(preMarketPriceStr)
 		}
 
+		// Set red green for the market price text
+		if marketPrice >= regularMarketPreviousClose {
+			marketPriceStr = pterm.LightGreen(marketPriceStr)
+		} else {
+			marketPriceStr = pterm.LightRed(marketPriceStr)
+		}
+
+		marketPriceDiff := fmt.Sprintf(" (%.2f)", marketPrice-regularMarketPreviousClose)
+
+		preMarketPriceDiff := ""
+		if preMarketPrice != 0.00 {
+			preMarketPriceDiff = fmt.Sprintf(" (%.2f)", preMarketPrice-regularMarketPreviousClose)
+		}
+
 		table = append(
 			table,
-			[]string{elem.Symbol, marketPriceStr, preMarketPriceStr, elem.MarketState, elem.Currency, elem.Exchange},
+			[]string{
+				elem.Symbol,
+				marketPriceStr + marketPriceDiff,
+				preMarketPriceStr + preMarketPriceDiff,
+				elem.MarketState,
+				elem.Currency,
+				elem.Exchange},
 		)
 	}
 
