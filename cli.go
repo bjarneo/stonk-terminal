@@ -128,6 +128,10 @@ func printLogo() {
 	pterm.Println(pterm.Green(logo))
 }
 
+func printFooter() {
+	pterm.Println(pterm.Gray("Made with <3 by github.com/bjarneo"))
+}
+
 func main() {
 	for {
 		time.Sleep(time.Second * 5)
@@ -138,6 +142,7 @@ func main() {
 
 		printLogo()
 		printTable(quote)
+		printFooter()
 	}
 
 }
