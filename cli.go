@@ -126,22 +126,6 @@ func printTable(quote []Quote) {
 	pterm.DefaultTable.WithHasHeader().WithData(table).Render()
 }
 
-func printLogo() {
-	logo := `
-    /$$$$$$  /$$$$$$$$/$$$$$$  /$$   /$$ /$$   /$$  /$$$$$$ 
-   /$$__  $$|__  $$__/$$__  $$| $$$ | $$| $$  /$$/ /$$__  $$
-  | $$  \__/   | $$ | $$  \ $$| $$$$| $$| $$ /$$/ | $$  \__/
-  |  $$$$$$    | $$ | $$  | $$| $$ $$ $$| $$$$$/  |  $$$$$$ 
-   \____  $$   | $$ | $$  | $$| $$  $$$$| $$  $$   \____  $$
-   /$$  \ $$   | $$ | $$  | $$| $$\  $$$| $$\  $$  /$$  \ $$
-  |  $$$$$$/   | $$ |  $$$$$$/| $$ \  $$| $$ \  $$|  $$$$$$/
-   \______/    |__/  \______/ |__/  \__/|__/  \__/ \______/ 
-                                                          
-`
-
-	pterm.Println(pterm.Green(logo))
-}
-
 func printFooter() {
 	pterm.Println(pterm.Gray("Made with <3 by github.com/bjarneo"))
 }
@@ -153,9 +137,7 @@ func main() {
 		quote := getQuote(getSymbols())
 
 		clear()
-		clear()
 
-		printLogo()
 		printTable(quote)
 		printFooter()
 	}
