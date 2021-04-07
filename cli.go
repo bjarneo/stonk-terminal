@@ -14,10 +14,12 @@ import (
 )
 
 type Quote struct {
-	Symbol         string
-	PreMarketPrice float64
-	MarketState    string
-	Exchange       string
+	Symbol             string
+	RegularMarketPrice float64
+	PreMarketPrice     float64
+	MarketState        string
+	Currency           string
+	Exchange           string
 }
 
 type Result struct {
@@ -34,7 +36,7 @@ func getSymbols() string {
 
 func getQuote(symbols string) []Quote {
 	// https://tutorialedge.net/golang/consuming-restful-api-with-go/
-	api := "https://query1.finance.yahoo.com/v7/finance/quote?lang=en-US&region=US&corsDomain=finance.yahoo.com&symbols=" + symbols
+	api := "https://query1.finance.yahoo.com/v7/finance/quote?corsDomain=finance.yahoo.com&symbols=" + symbols
 	resp, err := http.Get(api)
 
 	if err != nil {
@@ -59,12 +61,12 @@ func clear() {
 }
 
 func printTable(quote []Quote) {
-	table := pterm.TableData{{"Symbol", "PreMarketPrice", "MarketState", "Exchange"}}
+	table := pterm.TableData{{"Symbol", "Market Price", "Pre Market Price", "Market State", "Currency", "Exchange"}}
 
 	for _, elem := range quote {
 		table = append(
 			table,
-			[]string{elem.Symbol, fmt.Sprintf("%.2f", elem.PreMarketPrice), elem.MarketState, elem.Exchange},
+			[]string{elem.Symbol, fmt.Sprintf("%.2f", elem.RegularMarketPrice), fmt.Sprintf("%.2f", elem.PreMarketPrice), elem.MarketState, elem.Currency, elem.Exchange},
 		)
 	}
 
