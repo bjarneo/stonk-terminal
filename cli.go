@@ -62,7 +62,7 @@ func clear() {
 }
 
 func printTable(quote []Quote) {
-	table := pterm.TableData{{"Symbol", "Previous Market Price", "Market Price", "Pre Market Price", "Market State", "Currency", "Exchange"}}
+	table := pterm.TableData{{"Symbol", "Previous Market Price", "Market Price", "Percentage", "Pre Market Price", "Market State", "Currency", "Exchange"}}
 
 	for _, elem := range quote {
 		regularMarketPreviousClose := elem.RegularMarketPreviousClose
@@ -96,12 +96,15 @@ func printTable(quote []Quote) {
 			preMarketPriceDiff = fmt.Sprintf(" (%.2f)", preMarketPrice-regularMarketPreviousClose)
 		}
 
+		percentageDiff := fmt.Sprintf("%.2f", (marketPrice/regularMarketPreviousClose*100)-100)
+
 		table = append(
 			table,
 			[]string{
 				elem.Symbol,
 				regularMarketPreviousCloseStr,
 				marketPriceStr + marketPriceDiff,
+				percentageDiff,
 				preMarketPriceStr + preMarketPriceDiff,
 				elem.MarketState,
 				elem.Currency,
@@ -138,6 +141,7 @@ func main() {
 
 		quote := getQuote(getSymbols())
 
+		clear()
 		clear()
 
 		printLogo()
