@@ -112,6 +112,22 @@ func printTable(quote []Quote) {
 	pterm.DefaultTable.WithHasHeader().WithData(table).Render()
 }
 
+func printLogo() {
+	logo := `
+    /$$$$$$  /$$$$$$$$/$$$$$$  /$$   /$$ /$$   /$$  /$$$$$$ 
+   /$$__  $$|__  $$__/$$__  $$| $$$ | $$| $$  /$$/ /$$__  $$
+  | $$  \__/   | $$ | $$  \ $$| $$$$| $$| $$ /$$/ | $$  \__/
+  |  $$$$$$    | $$ | $$  | $$| $$ $$ $$| $$$$$/  |  $$$$$$ 
+   \____  $$   | $$ | $$  | $$| $$  $$$$| $$  $$   \____  $$
+   /$$  \ $$   | $$ | $$  | $$| $$\  $$$| $$\  $$  /$$  \ $$
+  |  $$$$$$/   | $$ |  $$$$$$/| $$ \  $$| $$ \  $$|  $$$$$$/
+   \______/    |__/  \______/ |__/  \__/|__/  \__/ \______/ 
+                                                          
+`
+
+	pterm.Println(pterm.Green(logo))
+}
+
 func main() {
 	for {
 		time.Sleep(time.Second * 5)
@@ -120,6 +136,7 @@ func main() {
 
 		clear()
 
+		printLogo()
 		printTable(quote)
 	}
 
