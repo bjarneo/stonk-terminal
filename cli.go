@@ -62,7 +62,7 @@ func clear() {
 }
 
 func printTable(quote []Quote) {
-	table := pterm.TableData{{"Symbol", "Previous Market Price", "Market Price", "Percentage", "Pre Market Price", "Market State", "Currency", "Exchange"}}
+	table := pterm.TableData{{"Symbol", "Previous Price", "Price", "%", "Pre Price", "State", "Currency", "Exchange"}}
 
 	for _, elem := range quote {
 		regularMarketPreviousClose := elem.RegularMarketPreviousClose
