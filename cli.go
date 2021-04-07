@@ -80,12 +80,6 @@ func main() {
 		quote := getQuote(getSymbols())
 
 		clear()
-		/*
-			for x, elem := range quote {
-				fmt.Println(x)
-				fmt.Println(elem)
-			}
-		*/
 
 		printTable(quote)
 	}
