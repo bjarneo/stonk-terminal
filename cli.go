@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
+	"math"
 	"net/http"
 	"os"
 	"strings"
@@ -89,22 +90,32 @@ func printTable(quote []Quote) {
 			marketPriceStr = pterm.LightRed(marketPriceStr)
 		}
 
-		marketPriceDiff := fmt.Sprintf(" (%.2f)", marketPrice-regularMarketPreviousClose)
+		// Add + if not is negative number
+		marketPriceDiff := marketPrice - regularMarketPreviousClose
+		marketPriceDiffStr := fmt.Sprintf(" (%.2f)", marketPriceDiff)
+		if !math.Signbit(marketPriceDiff) {
+			marketPriceDiffStr = fmt.Sprintf(" (+%.2f)", marketPriceDiff)
+		}
 
 		preMarketPriceDiff := ""
 		if preMarketPrice != 0.00 {
 			preMarketPriceDiff = fmt.Sprintf(" (%.2f)", preMarketPrice-regularMarketPreviousClose)
 		}
 
-		percentageDiff := fmt.Sprintf("%.2f", (marketPrice/regularMarketPreviousClose*100)-100)
+		// Add + if not is negative number
+		percentageDiff := (marketPrice / regularMarketPreviousClose * 100) - 100
+		percentageDiffStr := fmt.Sprintf("%.2f", percentageDiff)
+		if !math.Signbit(percentageDiff) {
+			percentageDiffStr = fmt.Sprintf("+%.2f", percentageDiff)
+		}
 
 		table = append(
 			table,
 			[]string{
 				elem.Symbol,
 				regularMarketPreviousCloseStr,
-				marketPriceStr + marketPriceDiff,
-				percentageDiff,
+				marketPriceStr + marketPriceDiffStr,
+				percentageDiffStr,
 				preMarketPriceStr + preMarketPriceDiff,
 				elem.MarketState,
 				elem.Currency,
