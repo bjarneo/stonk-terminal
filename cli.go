@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
-	"math"
 	"net/http"
 	"os"
 	"strings"
@@ -17,7 +16,10 @@ import (
 type Quote struct {
 	Symbol                     string
 	RegularMarketPrice         float64
+	RegularMarketChange        float64
+	RegularMarketChangePercent float64
 	PreMarketPrice             float64
+	PostMarketPrice            float64
 	RegularMarketPreviousClose float64
 	MarketState                string
 	Currency                   string
@@ -62,26 +64,56 @@ func clear() {
 	print("\033[H\033[2J")
 }
 
+/*
+"postMarketChangePercent": -0.21913771,
+"postMarketTime": 1617827573,
+"postMarketPrice": 177.58,
+"postMarketChange": -0.3899994,
+"regularMarketChange": -6.53,
+"regularMarketChangePercent": -3.53929,
+"regularMarketTime": 1617825602,
+"regularMarketPrice": 177.97,
+"regularMarketDayHigh": 184.46,
+"regularMarketDayRange": "176.11 - 184.46",
+"regularMarketDayLow": 176.11,
+"regularMarketVolume": 4602621,
+"regularMarketPreviousClose": 184.5,
+*/
+
+func getPostPreMarket(preMarket float64, postMarket float64, marketPrice float64, regularMarketPreviousClose float64) string {
+	postPreMarketPrice := preMarket
+	postPreMarketPriceStr := fmt.Sprintf("%.2f", preMarket)
+	if postPreMarketPrice == 0.00 {
+		postPreMarketPrice = postMarket
+	}
+
+	// set red green normal for the premarket price
+	if postPreMarketPrice >= marketPrice {
+		postPreMarketPriceStr = pterm.LightGreen(postPreMarketPriceStr)
+	} else if postPreMarketPrice == 0.00 {
+		postPreMarketPriceStr = pterm.Normal(postPreMarketPriceStr)
+	} else {
+		postPreMarketPriceStr = pterm.LightRed(postPreMarketPriceStr)
+	}
+
+	postPreMarketPriceDiff := ""
+	if postPreMarketPrice != 0.00 {
+		postPreMarketPriceDiff = fmt.Sprintf(" (%.2f)", postPreMarketPrice-regularMarketPreviousClose)
+	}
+
+	return postPreMarketPriceStr + postPreMarketPriceDiff
+}
+
 func printTable(quote []Quote) {
-	table := pterm.TableData{{"Symbol", "Previous Price", "Price", "%", "Pre Price", "State", "Currency", "Exchange"}}
+	table := pterm.TableData{{"Symbol", "Previous Price", "Price", "%", "PPP", "State", "Currency", "Exchange"}}
 
 	for _, elem := range quote {
 		regularMarketPreviousClose := elem.RegularMarketPreviousClose
 		marketPrice := elem.RegularMarketPrice
-		preMarketPrice := elem.PreMarketPrice
-
+		marketPriceChange := fmt.Sprintf(" (%.2f)", elem.RegularMarketChange)
+		marketPriceChangePercent := fmt.Sprintf("%.2f", elem.RegularMarketChangePercent)
 		regularMarketPreviousCloseStr := fmt.Sprintf("%.2f", regularMarketPreviousClose)
 		marketPriceStr := fmt.Sprintf("%.2f", marketPrice)
-		preMarketPriceStr := fmt.Sprintf("%.2f", preMarketPrice)
-
-		// set red green normal for the premarket price
-		if preMarketPrice >= marketPrice {
-			preMarketPriceStr = pterm.LightGreen(preMarketPriceStr)
-		} else if preMarketPrice == 0.00 {
-			preMarketPriceStr = pterm.Normal(preMarketPriceStr)
-		} else {
-			preMarketPriceStr = pterm.LightRed(preMarketPriceStr)
-		}
 
 		// Set red green for the market price text
 		if marketPrice >= regularMarketPreviousClose {
@@ -90,33 +122,14 @@ func printTable(quote []Quote) {
 			marketPriceStr = pterm.LightRed(marketPriceStr)
 		}
 
-		// Add + if not is negative number
-		marketPriceDiff := marketPrice - regularMarketPreviousClose
-		marketPriceDiffStr := fmt.Sprintf(" (%.2f)", marketPriceDiff)
-		if !math.Signbit(marketPriceDiff) {
-			marketPriceDiffStr = fmt.Sprintf(" (+%.2f)", marketPriceDiff)
-		}
-
-		preMarketPriceDiff := ""
-		if preMarketPrice != 0.00 {
-			preMarketPriceDiff = fmt.Sprintf(" (%.2f)", preMarketPrice-regularMarketPreviousClose)
-		}
-
-		// Add + if not is negative number
-		percentageDiff := (marketPrice / regularMarketPreviousClose * 100) - 100
-		percentageDiffStr := fmt.Sprintf("%.2f", percentageDiff)
-		if !math.Signbit(percentageDiff) {
-			percentageDiffStr = fmt.Sprintf("+%.2f", percentageDiff)
-		}
-
 		table = append(
 			table,
 			[]string{
 				elem.Symbol,
 				regularMarketPreviousCloseStr,
-				marketPriceStr + marketPriceDiffStr,
-				percentageDiffStr,
-				preMarketPriceStr + preMarketPriceDiff,
+				marketPriceStr + marketPriceChange,
+				marketPriceChangePercent,
+				getPostPreMarket(elem.PreMarketPrice, elem.PostMarketPrice, marketPrice, regularMarketPreviousClose),
 				elem.MarketState,
 				elem.Currency,
 				elem.Exchange},
