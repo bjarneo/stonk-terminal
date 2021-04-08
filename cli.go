@@ -96,6 +96,7 @@ func getPostPreMarket(preMarket float64, postMarket float64, marketPrice float64
 		postPreMarketPriceStr = pterm.LightRed(postPreMarketPriceStr)
 	}
 
+	// Create market price diff
 	postPreMarketPriceDiff := ""
 	if postPreMarketPrice != 0.00 {
 		postPreMarketPriceDiff = fmt.Sprintf(" (%.2f)", postPreMarketPrice-regularMarketPreviousClose)
