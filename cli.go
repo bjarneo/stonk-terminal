@@ -19,7 +19,9 @@ type Quote struct {
 	RegularMarketChange        float64
 	RegularMarketChangePercent float64
 	PreMarketPrice             float64
+	PreMarketChange            float64
 	PostMarketPrice            float64
+	PostMarketChange           float64
 	RegularMarketPreviousClose float64
 	MarketState                string
 	Currency                   string
@@ -80,12 +82,12 @@ func clear() {
 "regularMarketPreviousClose": 184.5,
 */
 
-func getPostPreMarket(preMarket float64, postMarket float64, marketPrice float64, regularMarketPreviousClose float64) string {
+func getPostPreMarket(preMarket float64, postMarket float64, marketPrice float64) string {
 	postPreMarketPrice := preMarket
-	postPreMarketPriceStr := fmt.Sprintf("%.2f", preMarket)
-	if postPreMarketPrice == 0.00 {
+	if preMarket == 0 {
 		postPreMarketPrice = postMarket
 	}
+	postPreMarketPriceStr := fmt.Sprintf("%.2f", postPreMarketPrice)
 
 	// set red green normal for the premarket price
 	if postPreMarketPrice >= marketPrice {
@@ -96,13 +98,19 @@ func getPostPreMarket(preMarket float64, postMarket float64, marketPrice float64
 		postPreMarketPriceStr = pterm.LightRed(postPreMarketPriceStr)
 	}
 
-	// Create market price diff
-	postPreMarketPriceDiff := ""
-	if postPreMarketPrice != 0.00 {
-		postPreMarketPriceDiff = fmt.Sprintf(" (%.2f)", postPreMarketPrice-regularMarketPreviousClose)
+	return postPreMarketPriceStr
+}
+
+func getPostPreMarketChange(postMarketChange float64, preMarketChange float64) string {
+	if postMarketChange != 0.00 {
+		return fmt.Sprintf(" (%.2f)", postMarketChange)
 	}
 
-	return postPreMarketPriceStr + postPreMarketPriceDiff
+	if preMarketChange != 0.00 {
+		return fmt.Sprintf(" (%.2f)", preMarketChange)
+	}
+
+	return ""
 }
 
 func printTable(quote []Quote) {
@@ -130,7 +138,7 @@ func printTable(quote []Quote) {
 				regularMarketPreviousCloseStr,
 				marketPriceStr + marketPriceChange,
 				marketPriceChangePercent,
-				getPostPreMarket(elem.PreMarketPrice, elem.PostMarketPrice, marketPrice, regularMarketPreviousClose),
+				getPostPreMarket(elem.PreMarketPrice, elem.PostMarketPrice, marketPrice) + getPostPreMarketChange(elem.PostMarketChange, elem.PreMarketChange),
 				elem.MarketState,
 				elem.Currency,
 				elem.Exchange},
