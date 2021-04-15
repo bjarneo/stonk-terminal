@@ -66,22 +66,6 @@ func clear() {
 	print("\033[H\033[2J")
 }
 
-/*
-"postMarketChangePercent": -0.21913771,
-"postMarketTime": 1617827573,
-"postMarketPrice": 177.58,
-"postMarketChange": -0.3899994,
-"regularMarketChange": -6.53,
-"regularMarketChangePercent": -3.53929,
-"regularMarketTime": 1617825602,
-"regularMarketPrice": 177.97,
-"regularMarketDayHigh": 184.46,
-"regularMarketDayRange": "176.11 - 184.46",
-"regularMarketDayLow": 176.11,
-"regularMarketVolume": 4602621,
-"regularMarketPreviousClose": 184.5,
-*/
-
 func getPostPreMarket(preMarket float64, postMarket float64, marketPrice float64) string {
 	postPreMarketPrice := preMarket
 	if preMarket == 0 {
@@ -92,8 +76,6 @@ func getPostPreMarket(preMarket float64, postMarket float64, marketPrice float64
 	// set red green normal for the premarket price
 	if postPreMarketPrice >= marketPrice {
 		postPreMarketPriceStr = pterm.LightGreen(postPreMarketPriceStr)
-	} else if postPreMarketPrice == 0.00 {
-		postPreMarketPriceStr = pterm.Normal(postPreMarketPriceStr)
 	} else {
 		postPreMarketPriceStr = pterm.LightRed(postPreMarketPriceStr)
 	}
@@ -102,11 +84,11 @@ func getPostPreMarket(preMarket float64, postMarket float64, marketPrice float64
 }
 
 func getPostPreMarketChange(postMarketChange float64, preMarketChange float64) string {
-	if postMarketChange != 0.00 {
+	if postMarketChange != 0 {
 		return fmt.Sprintf(" (%.2f)", postMarketChange)
 	}
 
-	if preMarketChange != 0.00 {
+	if preMarketChange != 0 {
 		return fmt.Sprintf(" (%.2f)", preMarketChange)
 	}
 
