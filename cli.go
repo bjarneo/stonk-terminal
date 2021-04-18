@@ -134,7 +134,7 @@ func printFooter() {
 	pterm.Println(pterm.Gray("Made with <3 by github.com/bjarneo"))
 }
 
-func main() {
+func run() {
 	for {
 		time.Sleep(time.Second * 5)
 
@@ -145,5 +145,8 @@ func main() {
 		printTable(quote)
 		printFooter()
 	}
+}
 
+func main() {
+	run()
 }
