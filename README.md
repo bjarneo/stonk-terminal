@@ -1,4 +1,4 @@
-Real bad code base writte in GO as a learning project
+Real bad code base written in GO as a learning project
 
 build/ has the cli for darwin and linux.
 
