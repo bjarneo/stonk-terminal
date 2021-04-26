@@ -25,6 +25,10 @@ type Quote struct {
 	RegularMarketPreviousClose float64
 	RegularMarketDayHigh       float64
 	RegularMarketDayLow        float64
+	Bid                        float64
+	Ask                        float64
+	BidSize                    int
+	AskSize                    int
 	MarketState                string
 	Currency                   string
 	Exchange                   string
@@ -100,7 +104,7 @@ func getPostPreMarketChange(postMarketChange float64, preMarketChange float64) s
 }
 
 func printTable(quote []Quote) {
-	table := pterm.TableData{{"Symbol", "Previous Price", "Price", "%", "PPP", "Low", "High", "State", "Currency", "Exchange"}}
+	table := pterm.TableData{{"Symbol", "Prev Price", "Price", "%", "PPP", "Low", "High", "Bid", "Ask", "State", "Curr", "Exch"}}
 
 	for _, elem := range quote {
 		regularMarketPreviousClose := elem.RegularMarketPreviousClose
@@ -127,6 +131,8 @@ func printTable(quote []Quote) {
 				getPostPreMarket(elem.PreMarketPrice, elem.PostMarketPrice, marketPrice) + getPostPreMarketChange(elem.PostMarketChange, elem.PreMarketChange),
 				fmt.Sprintf("%.2f", elem.RegularMarketDayLow),
 				fmt.Sprintf("%.2f", elem.RegularMarketDayHigh),
+				fmt.Sprintf("%.2f (%d)", elem.Bid, elem.BidSize),
+				fmt.Sprintf("%.2f (%d)", elem.Ask, elem.AskSize),
 				elem.MarketState,
 				elem.Currency,
 				elem.Exchange},
