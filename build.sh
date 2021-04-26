@@ -3,6 +3,8 @@
 # Docs
 # https://golang.org/doc/install/source#environment
 
+rm -rf build/
+
 # Linux
 env GOOS=linux GOARCH=arm go build -o build/cli-linux-arm -v cli.go  
 env GOOS=linux GOARCH=386 go build -o build/cli-linux-386 -v cli.go  
