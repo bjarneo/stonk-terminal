@@ -10,3 +10,5 @@ $ mv build/cli-{system} /usr/local/bin/stonks
 # usage
 $ stonks gme amc tsla mvis
 ```
+
+TODO: Rewrite the entire thing
