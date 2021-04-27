@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"flag"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -147,8 +148,12 @@ func printFooter() {
 }
 
 func run() {
+	interval := flag.Int("i", 5, "interval set to refetch stock data")
+
+	flag.Parse()
+
 	for {
-		time.Sleep(time.Second * 5)
+		time.Sleep(time.Duration(*interval) * time.Second)
 
 		quote := getQuote(getSymbols())
 

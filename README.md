@@ -7,8 +7,9 @@ Usage:
 ```bash
 $ mv build/cli-{system} /usr/local/bin/stonks
 
-# usage
-$ stonks gme amc tsla mvis
+# usage stonks -i intervalSeconds stock1 stock2 stock3
+$ stonks -i 5 gme amc tsla mvis
+
 ```
 
 TODO: Rewrite the entire thing
