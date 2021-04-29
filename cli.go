@@ -43,8 +43,8 @@ type QuoteResponse struct {
 	QuoteResponse Result `json:"quoteResponse"`
 }
 
-func getSymbols() string {
-	return strings.Join(os.Args[1:], ",")
+func getSymbols(separator string) string {
+	return strings.Join(os.Args[1:], separator)
 }
 
 func getQuote(symbols string) []Quote {
@@ -155,7 +155,7 @@ func run() {
 	for {
 		time.Sleep(time.Duration(*interval) * time.Second)
 
-		quote := getQuote(getSymbols())
+		quote := getQuote(getSymbols(","))
 
 		clear()
 
@@ -165,5 +165,6 @@ func run() {
 }
 
 func main() {
+    fmt.Println("\033]0;STONKS: " + strings.ToUpper(getSymbols(" ")) +"\007")
 	run()
 }
