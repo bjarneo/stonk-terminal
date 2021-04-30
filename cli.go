@@ -75,6 +75,10 @@ func clear() {
 	print("\033[H\033[2J")
 }
 
+func printTitle() {
+	fmt.Println("\033]0;STONKS: " + strings.ToUpper(getSymbols(" ")) + "\007")
+}
+
 func getPostPreMarket(preMarket float64, postMarket float64, marketPrice float64) string {
 	postPreMarketPrice := preMarket
 	if preMarket == 0 {
@@ -152,6 +156,8 @@ func run() {
 
 	flag.Parse()
 
+	printTitle()
+
 	for {
 		time.Sleep(time.Duration(*interval) * time.Second)
 
@@ -165,6 +171,5 @@ func run() {
 }
 
 func main() {
-    fmt.Println("\033]0;STONKS: " + strings.ToUpper(getSymbols(" ")) +"\007")
 	run()
 }
