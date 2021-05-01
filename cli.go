@@ -151,7 +151,21 @@ func printFooter() {
 	pterm.Println(pterm.Gray("Made with <3 by github.com/bjarneo"))
 }
 
+func printIntro() {
+	clear()
+
+	s, _ := pterm.DefaultBigText.WithLetters(
+		pterm.NewLettersFromStringWithStyle("S", pterm.NewStyle(pterm.FgCyan)),
+		pterm.NewLettersFromStringWithStyle("tonks", pterm.NewStyle(pterm.FgLightMagenta))).Srender()
+
+	pterm.DefaultCenter.Println(s)
+
+	time.Sleep(time.Duration(3) * time.Second)
+}
+
 func run() {
+	printIntro()
+
 	interval := flag.Int("i", 5, "interval set to refetch stock data")
 
 	flag.Parse()
