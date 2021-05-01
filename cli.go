@@ -160,7 +160,7 @@ func printIntro() {
 
 	pterm.DefaultCenter.Println(s)
 
-	time.Sleep(time.Duration(3) * time.Second)
+	time.Sleep(1 * time.Second)
 }
 
 func run() {
